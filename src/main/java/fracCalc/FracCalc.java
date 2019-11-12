@@ -13,7 +13,10 @@ public class FracCalc {
 		Scanner userInput = new Scanner(System.in);
 		// TODO: Read the input from the user and call produceAnswer with an equation
 		String input = userInput.nextLine();
-		System.out.println(produceAnswer(input));
+		while (input.indexOf("quit") == -1) {
+			System.out.println(produceAnswer(input));
+			input = userInput.nextLine();
+		}
 		userInput.close();
 	}
 
