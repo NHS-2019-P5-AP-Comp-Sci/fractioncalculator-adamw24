@@ -10,61 +10,78 @@ import org.checkerframework.checker.units.qual.s;
 
 public class FracCalc {
 	public static void main(String[] args) {
+		System.out.println("Welcome to Fraction Calculator.");
+		System.out.println("Enter two fractions to calculate either +, -, *, or / .");
+		System.out.println("Remember the proper formating.");
+		System.out.print("Enter here: ");
 		Scanner userInput = new Scanner(System.in);
 		// TODO: Read the input from the user and call produceAnswer with an equation
 		String input = userInput.nextLine();
 		while (input.indexOf("quit") == -1) {
 			System.out.println(produceAnswer(input));
+			System.out.print("Enter here: ");
 			input = userInput.nextLine();
 		}
+		System.out.println("Program quit.");
 		userInput.close();
 	}
 
-	// ** IMPORTANT ** DO NOT DELETE THIS FUNCTION. This function will be used to
-	// test your code
-	// This function takes a String 'input' and produces the result
-	//
-	// input is a fraction string that needs to be evaluated. For your program, this
-	// will be the user input.
-	// e.g. input ==> "1/2 + 3/4"
-	//
-	// The function should return the result of the fraction after it has been
-	// calculated
-	// e.g. return ==> "1_1/4"
-
-	/*
-	 * public static String produceAnswer(String input) { int totalNumer = 0; int
-	 * totalDenom = 1; int totalWhole = 0; if (input.charAt(0) == ' ') { input =
-	 * input.substring(1); } int firstSpace = input.indexOf(" "); String
-	 * firstOperand = input.substring(0, firstSpace); int wholeF =
-	 * whole(firstOperand); int numerF = numerator(firstOperand); int denomF =
-	 * denominator(firstOperand); char operator = input.charAt(firstSpace + 1);
-	 * String secondOperand = input.substring(firstSpace + 3); int wholeS =
-	 * whole(secondOperand); int numerS = numerator(secondOperand); int denomS =
-	 * denominator(secondOperand); if (operator == '+') { totalWhole = wholeF +
-	 * wholeS; totalNumer = numerF * denomS + numerS * denomF; } else if (operator
-	 * == '-') { totalWhole = wholeF - wholeS; totalNumer = numerF * denomS - numerS
-	 * * denomF; } else if (operator == '*') { totalNumer = (wholeF*denomF + numerF)
-	 * (wholeS*denomS + numerS); totalDenom = denomF * denomS; total = "" +
-	 * totalNumer + "/" + totalDenom; } totalDenom = denomF * denomS; String total =
-	 * "" + totalWhole + "_" + totalNumer + "/" + totalDenom; return total; }
-	 */
-
 	public static String produceAnswer(String input) {
+		int totalNumer = 0;
+		int totalDenom = 1;
+		int totalWhole = 0;
+		String total = "";
+		int numerF = 0;
+		int numerS = 0;
 		if (input.charAt(0) == ' ') {
 			input = input.substring(1);
 		}
 		int firstSpace = input.indexOf(" ");
 		String firstOperand = input.substring(0, firstSpace);
-		firstOperand = "whole:" + whole(firstOperand) + "numerator:" + numerator(firstOperand) + "denominator:"
-				+ denominator(firstOperand);
+		int wholeF = whole(firstOperand);
+		if (wholeF < 0) {
+			numerF = -1 * numerator(firstOperand);
+		}else {
+			numerF = numerator(firstOperand);
+		}
+		int denomF = denominator(firstOperand);
 		String operator = input.substring(firstSpace + 1, firstSpace + 2);
 		String secondOperand = input.substring(firstSpace + 3);
-		secondOperand = "whole:" + whole(secondOperand) + " numerator:" + numerator(secondOperand) + " denominator:"
-				+ denominator(secondOperand);
-		return secondOperand;
+		int wholeS = whole(secondOperand);
+		if (wholeS < 0) {
+			numerS = -1 * numerator(secondOperand);
+		}else {
+			numerS = numerator(secondOperand);
+		}
+		int denomS = denominator(secondOperand);
+		//the following if and else if statements perform the calculations.
+		if (operator.equals("+")) {
+			totalWhole = wholeF + wholeS;
+			totalNumer = numerF * denomS + numerS * denomF;
+			totalDenom = denomF * denomS;
+		} else if (operator.equals("-")) {
+			totalWhole = wholeF - wholeS;
+			totalNumer = numerF * denomS - numerS * denomF;
+			totalDenom = denomF * denomS;
+		} else if (operator.equals("*")) {
+			totalNumer = (wholeF * denomF + numerF) * (wholeS * denomS + numerS);
+			totalDenom = denomF * denomS;
+		} else {
+			totalNumer = (wholeF * denomF + numerF) * denomS;
+			totalDenom = denomF * (wholeS * denomS + numerS);
+		}
+		// The following if and else if statements combine the whole, numerator, and denominator to print out.
+		if (totalWhole == 0 ) {
+			total = "" + totalNumer + "/" + totalDenom;
+		}else if (totalWhole < 0){
+			total = "" + totalWhole + "_" + (-1* totalNumer) + "/" + totalDenom;
+		}else{
+			total = "" + totalWhole + "_" + totalNumer + "/" + totalDenom;
+		}
+		return total;
+		// return secondOperand;
 	}
-
+	// The following method parses the whole from the user input
 	public static int whole(String operand) {
 		int whole = 0;
 		if (operand.indexOf("_") != -1) {
@@ -74,7 +91,7 @@ public class FracCalc {
 		}
 		return whole;
 	}
-
+	// The following method parses the numerator from the user input
 	public static int numerator(String operand) {
 		int numer = 0;
 		if (operand.indexOf("/") != -1) {
@@ -82,7 +99,7 @@ public class FracCalc {
 		}
 		return numer;
 	}
-
+	// The following method parses the denominator from the user input
 	public static int denominator(String operand) {
 		int denom = 1;
 		if (operand.indexOf("/") != -1) {
