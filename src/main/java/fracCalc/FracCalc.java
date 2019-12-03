@@ -67,7 +67,9 @@ public class FracCalc {
 		total = simplify(totalNumer, totalDenom);
 		return total;
 	}
-
+	
+	// The following method simplifies the fraction given the total numerator and
+	// total denominator
 	public static String simplify(int totalNumer, int totalDenom) {
 		String simplified = "";
 		int totalWhole = 0;
